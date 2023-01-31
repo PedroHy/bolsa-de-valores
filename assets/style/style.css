@@ -1,0 +1,136 @@
+*{
+    margin: 0;
+    padding: 0;
+    
+    font-size: 62.5%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+:root{
+    --primary-dark: #06021A;
+    --primary: #080226;
+    --high: #00913A;
+    --low: #FF2A09;
+}
+
+/*#region Nav area */
+nav{
+    height: 8vh;
+    padding: 0 10vw;
+
+    display: flex;
+    align-items: center;
+
+    background-color: var(--primary-dark);
+    box-sizing: border-box;
+
+    box-shadow: inset 0 40px 20px var(--primary);
+}
+
+nav input{
+    width: 300px;
+    padding:8px 20px;
+
+    border: none;
+    border-radius: .5rem;
+    font-size: 1.4rem;
+}
+
+/* #endregion */
+
+/*#region main */
+main{
+    display: flex;
+}
+/* #endregion */
+
+/*#region bars*/
+.bars-container{
+    font-size: 4.6rem;
+    display: flex;
+    width: 60%;
+}
+
+.bar{
+    width: 33.3%;
+    height: 92vh;
+
+    text-align: center;     
+
+    border-left: solid 1px black;
+    border-radius: solid 1px balck;
+    background-color: var(--primary);
+    color: whitesmoke;
+}
+
+.bar h2{
+    margin: 10px 0;
+}
+
+/* Escurecendo o fundo das linhas impares */
+.bar-card:nth-child(odd) {
+    background-color: var(--primary-dark);
+}
+
+.bar-card{
+    padding: 5px 0;
+
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.bar-card span{
+    font-size: 1.4rem;
+}
+
+.bar-card .high-price{
+    color: var(--high);
+}
+
+.bar-card .low-price {
+    color: var(--low);
+}
+/* #endregion */
+
+/*#region dados*/
+.data-container{
+    width: 40%;
+    color: white;
+    background-color: var(--primary-dark);
+}
+
+.graphic{
+    height: 60%;
+    /* box-shadow: inset 0 0 15px red; */
+}
+
+.data{
+    font-size: 4.6rem;
+    padding: 2rem;
+    
+}
+
+.data-header{
+    display: flex;
+    justify-content: space-between;
+
+    font-size: 3.2rem;
+    line-height: 3rem;
+
+    margin-bottom: 4rem;
+}
+
+.data-header h1{
+    font-size: 3rem;
+}
+
+.data-content{
+    font-size: 4.6rem;
+    width: 65%;
+}
+
+.data-content div{
+    display: flex;
+    justify-content: space-between;
+}
+/* #endregion */
