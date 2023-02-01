@@ -7,42 +7,36 @@
     <title>Bolsa de valores</title>
 
     <link rel="stylesheet" href="/assets/style/style.css">
+    <script src="/assets/script/script.js" defer></script>
 </head>
 <body>
     <nav>
-        <input type="text" placeholder="Digite o nome da empresa: ">
+        <input type="text" placeholder="Digite o nome da empresa: " list="stocksList">
+        <datalist id="stocksList">
+            <option value="MGLU3">MGLU3</option>
+            <option value="AMER3">AMER3</option>
+        </datalist>
     </nav>
     <main>
         <div class="bars-container">
             <div class="bar">
                 <h2>Maiores altas:</h2>
                 <ul id="list-high">
-                    <li class="bar-card">
-                        <span>ITSA4</span> <span>R$ 39,90</span> <span class="low-price">-39%</span>
-                    </li>
-                    <li class="bar-card">
-                        <span>ITSA4</span> <span>R$ 39,90</span> <span class="low-price">-39%</span>
-                    </li>
+                    <template>
+                        <li class="bar-card">
+                            <span>ITSA4</span> <span>R$ 39,90</span> <span class="low-price">-39%</span>
+                        </li>
+                    </template>
                 </ul>
             </div>
             <div class="bar">
                 <h2>Maiores baixas:</h2>
                 <ul id="list-low">
-                    <li class="bar-card">
-                        <span>ITSA4</span> <span>R$ 39,90</span> <span class="low-price">-39%</span>
-                    </li>
-                    <li class="bar-card">
-                        <span>ITSA4</span> <span>R$ 39,90</span> <span class="low-price">-39%</span>
-                    </li>
-                    <li class="bar-card">
-                        <span>ITSA4</span> <span>R$ 39,90</span> <span class="high-price">+39%</span>
-                    </li>
-                    <li class="bar-card">
-                        <span>ITSA4</span> <span>R$ 39,90</span> <span class="low-price">-39%</span>
-                    </li>
-                    <li class="bar-card">
-                        <span>ITSA4</span> <span>R$ 39,90</span> <span class="high-price">+39%</span>
-                    </li>
+                    <template>
+                        <li class="bar-card">
+                            <span>ITSA4</span> <span>R$ 39,90</span> <span class="low-price">-39%</span>
+                        </li>
+                    </template>
                 </ul>
             </div>
             <div class="bar">
@@ -62,7 +56,7 @@
         </div>
         <div class="data-container">
             <div class="graphic">
-                <span>Aqui vai ter um gráfico</span>
+                <canvas class="line-chart"></canvas>
                 <!-- grafico canvas-->
             </div>
             <div class="data">
@@ -77,10 +71,12 @@
                     <div><span>Máxima de hoje: </span> <span>R$00,00</span></div>
                     <div><span>Mínima de hoje: </span> <span>R$00,00</span></div>
                     <div><span>Fechamento: </span> <span>R$00,00</span></div>
+                    <!-- Bom dia -->
                 </div>
             </div>
         </div>
     </main>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js" integrity="sha512-GMGzUEevhWh8Tc/njS0bDpwgxdCJLQBWG3Z2Ct+JGOpVnEmjvNx6ts4v6A2XJf1HOrtOsfhv3hBKpK9kE5z8AQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="assets/script/chart.js"></script>
 </body>
 </html>

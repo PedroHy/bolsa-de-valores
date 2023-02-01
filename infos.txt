@@ -1,0 +1,3 @@
+stock - codigo da empresa (AMER3)
+name - nome da empresa
+close - Fechamento
