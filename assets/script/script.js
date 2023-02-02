@@ -1,10 +1,109 @@
-//Coverte o timestamp para a data normal
-function convertDate(timestampCode){
-    var date = new Date(timestampCode *1000); 
-    return date.toLocaleDateString("pt-BR"); 
+
+async function main(){
+    console.log("Começei a trabalhar")
+
+    const list = await getDataList()
+    const list2 = await getDataList()
+
+    orderList(list, 'percent')
+    setTimeout(()=>{
+        const highs = getListHighs(list)
+        const lows = getListLows(list)
+
+        setList(highs, 'list-high')
+        setList(lows, 'list-low')  
+    }, 4000)   
+    
+    orderList(list2, 'volume')
+    setTimeout(()=>{
+        const top = getListLows(list2)
+        setList(top, 'list-top')
+        addListener()
+        
+        document.querySelector("#loading").style.display = "none"
+        createObj('AMER3')
+
+        const search = document.querySelector("#stock-list")
+        getStocksList().then(data =>{
+            data.forEach(entry =>{
+                const newOption = document.createElement("option")
+                newOption.innerHTML = entry.stock
+                newOption.value = entry.stock
+
+                search.appendChild(newOption)
+            })
+        })
+    }, 4000)
 }
 
-//pega o stock de cada empresa listada na bolsa
+async function getDataList(){
+    const enterprises = await getStocksList()
+
+    const enterprisesList = []
+
+    enterprises.forEach(async enterprise =>{
+        const stockInfo = await getStockInfo(enterprise.stock)
+        if(stockInfo != undefined){
+            let object = {
+                logo: enterprise.logo,
+                stock: enterprise.stock,
+                name: stockInfo.shortName,
+                current: stockInfo.regularMarketPrice.toFixed(2),
+                percent: stockInfo.regularMarketChangePercent
+            }
+    
+            enterprisesList.push(object)
+        }
+        
+    })
+
+    return enterprisesList
+}
+
+function orderList(list, attr){
+
+    setTimeout(() => {
+
+        switch(attr){
+            case 'percent':
+                list.sort(function (a, b) {
+                    return a.percent - b.percent
+                })
+            break;
+
+            case 'volume':
+                list.sort(function (a, b) {
+                    return a.volume - b.volume
+                })
+            break;
+        } 
+    }, 3000)
+}
+
+function getListHighs(list) {
+    const highs = []
+
+    for (let i = list.length-1; i >= list.length - 17; i--) {
+        highs.push(list[i])
+    }
+    
+    return highs
+}
+
+
+function getListLows(list){
+    const lows = []
+
+    for(let i = 0; i < 17; i++){
+        lows.push(list[i])
+    }
+    
+    return lows
+}
+
+main()
+
+//      ##API## 
 async function getStocksList(){
     const res = await fetch("https://brapi.dev/api/quote/list")
     const json = await res.json()
@@ -15,86 +114,45 @@ async function getStocksList(){
         let enterprise = {}
         enterprise.logo = entry.logo
         enterprise.stock = entry.stock
+        enterprise.volume = entry.volume
 
-        enterprises.push(enterprise)
+        if (entry.stock.slice(-1) != "F"){
+            enterprises.push(enterprise)
+        }
     })
     
     return enterprises
 }
 
-//pega os dados detalhados da empresa pelo stock
 async function getStockInfo(stockCode = String()) {
     const res = await fetch(`https://brapi.dev/api/quote/${stockCode}`)
-    const json = await res.json()
-    return json.results[0]
-}
-
-//pegar dados 
-async function getDataList(){
-    const enterprises = await getStocksList()
-
-    const enterprisesList = []
-
-    enterprises.forEach(async enterprise =>{
-        const stockInfo = await getStockInfo(enterprise.stock)
-        
-        let object = {
-            logo: enterprise.logo,
-            stock: enterprise.stock,
-            name: stockInfo.shortName,
-            current: stockInfo.regularMarketPrice,
-            percent: stockInfo.regularMarketChangePercent
-        }
-
-        enterprisesList.push(object)
-    })
-
-    return enterprisesList
-}
-
-async function orderList(){
-    const list = await getDataList()
-    setTimeout(()=>{
-        list.sort(function(a, b){
-            return a.percent - b.percent
-        })
-        
-        getListLows(list)
-        getListHighs(list)
-
-        
-    }, 2000)
-}
-
-function getListLows(list){
-    const lows = []
-
-    for(let i = 0; i < 20; i++){
-        lows.push(list[i])
-    }
-    setList(lows, 'list-low')
-    
-    // return lows
-}
-
-function getListHighs(list) {
-    const highs = []
-
-    for (let i = list.length-1; i >= list.length - 20; i--) {
-        highs.push(list[i])
+    if(res.ok){
+        const json = await res.json()
+        return json.results[0]
     }
     
-    setList(highs, 'list-high')
-   
-    
-    // return highs
+}
+
+async function getStockDetails(stockCode = String()) {
+    const res = await fetch(`https://brapi.dev/api/quote/${stockCode}?range=5d&interval=1d`)
+    if (res.ok) {
+        const json = await res.json()
+        return json.results[0]
+    }
+
+}
+
+//     #GRAFICO
+
+function convertDate(timestampCode){
+    var date = new Date(timestampCode *1000); 
+    return date.toLocaleDateString("pt-BR"); 
 }
 
 
 //      ###INTERFACE###
 
 function setList(list, barId){
-    console.log(list)
     const bar = document.querySelector(`#${barId}`)
     const template = bar.querySelector("template")
 
@@ -112,30 +170,53 @@ function setList(list, barId){
     })
 }
 
-orderList()
-
-/*
-async function americanasTeste(){
-    const amerData = await fetch("https://brapi.dev/api/quote/AMER3").then(data => data.json())
-    // console.log(amerData.results[0].regularMarketOpen)
-    const open = amerData.results[0].regularMarketOpen
-    const current = amerData.results[0].regularMarketPrice
-    const porcent = amerData.results[0].regularMarketChangePercent.toFixed(2)
-
-    const list = document.querySelector("#list-high")
-    const template = list.querySelector("template")
-    const newContent = template.content.cloneNode(true)
-    const spans = newContent.querySelectorAll("span")
-
-    // console.log(amerData.results[0].symbol)
-    spans[0].innerHTML = amerData.results[0].symbol
-    spans[1].innerHTML = `R$ ${current}`
-    spans[2].innerHTML = `${porcent}%`
-
-    spans[2].className = porcent > 0? "high-price" : "low-price"
-    list.appendChild(newContent)
-    // console.log(spans)
+function addListener(){
+    let empresas = document.querySelectorAll('li[class="bar-card"]')
+    empresas.forEach(empresa =>{
+        empresa.addEventListener('click', (event)=>{
+            let stock = event.target.querySelector('span').innerHTML
+            createObj(stock)
+        })
+    })
 }
-americanasTeste()
 
-*/
+function createObj(stock){
+    getStockDetails(stock).then((enterprise) => {
+        let obj = {
+            stock: stock,
+            current: enterprise.regularMarketPrice,
+            percent: enterprise.regularMarketChangePercent,
+            open: enterprise.regularMarketOpen,
+            max: enterprise.regularMarketDayHigh,
+            min: enterprise.regularMarketDayLow,
+            historical: enterprise.historicalDataPrice
+        }
+
+        setInfo(obj)
+    })
+}
+
+
+function setInfo(obj){
+    const header = document.querySelector(".data-header")
+    const enterpriseName = header.querySelector("h1")
+    const percent = header.querySelectorAll('span')[0]
+    const currentPrice = header.querySelectorAll('span')[1]
+
+    const content = document.querySelector(".data-content")
+    const spans = content.querySelectorAll("div span:last-child")
+    // [Fechamento anterior, Abertura do dia, Máxima de hoje, Mínima de hoje]
+
+    enterpriseName.innerHTML = obj.stock
+    percent.innerHTML = obj.percent.toFixed(2) + "%"
+    currentPrice.innerHTML = "R$" + obj.current.toFixed(2)
+
+    percent.className = obj.percent > 0 ? "high-price" : "low-price"
+
+    spans[0].innerHTML = "R$" + (obj.historical.length > 1 ? obj.historical[obj.historical.length-2].close.toFixed(2) : "00.00")
+    spans[1].innerHTML = "R$" + obj.open.toFixed(2)
+    spans[2].innerHTML = "R$" + obj.max.toFixed(2)
+    spans[3].innerHTML = "R$" + obj.min.toFixed(2)
+    
+
+}

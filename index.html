@@ -10,11 +10,15 @@
     <script src="/assets/script/script.js" defer></script>
 </head>
 <body>
+    <div id="loading">
+        <div class="bolinha"></div>
+        <div class="bolinha"></div>
+        <div class="bolinha"></div>
+    </div>
     <nav>
-        <input type="text" placeholder="Digite o nome da empresa: " list="stocksList">
-        <datalist id="stocksList">
-            <option value="MGLU3">MGLU3</option>
-            <option value="AMER3">AMER3</option>
+        <img src="assets/img/Investing.png" alt="logo">
+        <input type="text" placeholder="Digite o nome da empresa: " list="stock-list">
+        <datalist id="stock-list">
         </datalist>
     </nav>
     <main>
@@ -42,15 +46,11 @@
             <div class="bar">
                 <h2>Mais negociadas:</h2>
                 <ul id="list-top">
-                    <li class="bar-card">
-                        <span>ITSA4</span> <span>R$ 39,90</span> <span class="high-price">+39%</span>
-                    </li>
-                    <li class="bar-card">
-                        <span>ITSA4</span> <span>R$ 39,90</span> <span class="high-price">+39%</span>
-                    </li>
-                    <li class="bar-card">
-                        <span>ITSA4</span> <span>R$ 39,90</span> <span class="high-price">+39%</span>
-                    </li>
+                    <template>
+                        <li class="bar-card">
+                            <span>ITSA4</span> <span>R$ 39,90</span> <span class="low-price">-39%</span>
+                        </li>
+                    </template>
                 </ul>
             </div>
         </div>
@@ -61,8 +61,8 @@
             </div>
             <div class="data">
                 <div class="data-header">
-                    <h1>Nome da empresa</h1>
-                    <span>+0,05%</span>
+                    <h1>--</h1>
+                    <span>0%</span>
                     <span>R$00,00</span>
                 </div>
                 <div class="data-content">
@@ -70,12 +70,13 @@
                     <div><span>Abertura do dia: </span> <span>R$00,00</span></div>
                     <div><span>Máxima de hoje: </span> <span>R$00,00</span></div>
                     <div><span>Mínima de hoje: </span> <span>R$00,00</span></div>
-                    <div><span>Fechamento: </span> <span>R$00,00</span></div>
+                    <!-- <div><span>Fechamento: </span> <span>R$00,00</span></div> -->
                     <!-- Bom dia -->
                 </div>
             </div>
         </div>
     </main>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js" integrity="sha512-GMGzUEevhWh8Tc/njS0bDpwgxdCJLQBWG3Z2Ct+JGOpVnEmjvNx6ts4v6A2XJf1HOrtOsfhv3hBKpK9kE5z8AQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="assets/script/chart.js"></script>
 </body>
